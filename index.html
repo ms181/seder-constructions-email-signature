@@ -617,10 +617,11 @@
         }
 
         // Validate mobile - Not empty check only
-        if (!mobile || mobile.length > 20 || !/^[0-9()+]+$/.test(mobile)) {
-           mobileValidation.innerHTML = "Mobile number should not be empty, should not exceed 20 characters, and should only contain numbers, '+', '(', and ')'.";
-           isValid = false;
+        if (!mobile || mobile.length > 20 || !/^[0-9()+\s]+$/.test(mobile)) {
+          mobileValidation.innerHTML = "Mobile number should not be empty, should not exceed 20 characters, and should only contain numbers, '+', '(', ')', and spaces.";
+          isValid = false;
         }
+
 
 
         const imageFile = document.getElementById("filetag").files[0];
