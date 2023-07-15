@@ -23,6 +23,11 @@
     <style>
       @import url("https://fonts.googleapis.com/css?family=Rubik");
 
+      .validation-message {
+        font-size: 1.6em;
+        color: red;
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -296,7 +301,7 @@
         border-radius: 10px;
         padding: 1em 2em;
         color: #ffffff;
-        margin-top: 2em;
+        margin-top: 3em;
       }
 
       .card .main .content .disclaimer {
@@ -337,31 +342,24 @@
           <span class="textlabel"> Choose Profile Picture </span>
           <img src="" id="preview" />
         </label>
+        <span class="validation-message" id="imageValidation"></span>
       </div>
-      <input required type="text" name="Name" id="" placeholder="Name" /><br />
+      <input type="text" name="Name" id="name" placeholder="Name" />
+      <span class="validation-message" id="nameValidation"></span><br />
       <input
-        required
         type="text"
         name="Designation"
-        id=""
+        id="designation"
         placeholder="Designation"
-      /><br />
-      <input
-        required
-        type="text"
-        name="Email"
-        id=""
-        placeholder="Email"
-      /><br />
-      <input
-        required
-        type="text"
-        name="Mobile"
-        id=""
-        placeholder="Mobile"
-      /><br />
+      />
+      <span class="validation-message" id="designationValidation"></span><br />
+      <input type="text" name="Email" id="email" placeholder="Email" />
+      <span class="validation-message" id="emailValidation"></span><br />
+      <input type="text" name="Mobile" id="mobile" placeholder="Mobile" />
+      <span class="validation-message" id="mobileValidation"></span><br />
       <button type="submit">Preview</button>
     </form>
+
     <div id="body" style="display: none">
       <div class="card" id="htmltoimage">
         <img src="triangle-small.svg" alt="" class="svgBg" />
@@ -561,18 +559,89 @@
           reader.readAsDataURL(input.files[0]);
         }
       }
-
+    </script>
+    <script>
       document.querySelector("form").addEventListener("submit", (e) => {
         e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target).entries());
-        document.getElementById("body").style.display = "block";
-        document.getElementById("form").style.display = "none";
-        document.getElementById("displayName").innerHTML = data.Name;
-        document.getElementById("displayDesignation").innerHTML =
-          data.Designation;
-        document.getElementById("displayEmail").innerHTML = data.Email;
-        document.getElementById("displayMobile").innerHTML = data.Mobile;
+        if (validateForm()) {
+          const data = Object.fromEntries(new FormData(e.target).entries());
+          document.getElementById("body").style.display = "block";
+          document.getElementById("form").style.display = "none";
+          document.getElementById("displayName").innerHTML = data.Name;
+          document.getElementById("displayDesignation").innerHTML =
+            data.Designation;
+          document.getElementById("displayEmail").innerHTML = data.Email;
+          document.getElementById("displayMobile").innerHTML = data.Mobile;
+        }
       });
+
+      function validateForm() {
+        const name = document.getElementById("name").value;
+        const designation = document.getElementById("designation").value;
+        const email = document.getElementById("email").value;
+        const mobile = document.getElementById("mobile").value;
+
+        const nameValidation = document.getElementById("nameValidation");
+        const designationValidation = document.getElementById(
+          "designationValidation"
+        );
+        const emailValidation = document.getElementById("emailValidation");
+        const mobileValidation = document.getElementById("mobileValidation");
+        const imageValidation = document.getElementById("imageValidation");
+
+        nameValidation.innerHTML = "";
+        designationValidation.innerHTML = "";
+        emailValidation.innerHTML = "";
+        mobileValidation.innerHTML = "";
+        imageValidation.innerHTML = "";
+
+        let isValid = true;
+
+        if (!name || name.length > 25) {
+          nameValidation.innerHTML =
+            "Name should not be empty and should not exceed 25 characters.";
+          isValid = false;
+        }
+
+        if (!designation || designation.length > 45) {
+          designationValidation.innerHTML =
+            "Designation should not be empty and should not exceed 45 characters.";
+          isValid = false;
+        }
+
+        // Validate email format
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        if (!email || !emailRegex.test(email)) {
+          emailValidation.innerHTML = "Please enter a valid email address.";
+          isValid = false;
+        }
+
+        // Validate mobile - Not empty check only
+        if (!mobile) {
+          mobileValidation.innerHTML = "Mobile number should not be empty.";
+          isValid = false;
+        }
+
+        const imageFile = document.getElementById("filetag").files[0];
+        if (imageFile) {
+          const imageFileSize = imageFile.size / 1024; // Size in KB
+          const allowedFileSize = 2048; // Maximum allowed file size in KB
+          const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
+
+          if (imageFileSize > allowedFileSize) {
+            imageValidation.innerHTML = "File size should not exceed 2MB.";
+            isValid = false;
+          }
+
+          if (!allowedFileTypes.includes(imageFile.type)) {
+            imageValidation.innerHTML =
+              "Please choose a valid image file (JPEG, PNG, GIF).";
+            isValid = false;
+          }
+        }
+
+        return isValid;
+      }
     </script>
   </body>
 </html>
