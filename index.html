@@ -355,7 +355,7 @@
       <span class="validation-message" id="designationValidation"></span><br />
       <input type="text" name="Email" id="email" placeholder="Email" />
       <span class="validation-message" id="emailValidation"></span><br />
-      <input type="text" name="Mobile" id="mobile" placeholder="Mobile" />
+      <input type="number" name="Mobile" id="mobile" placeholder="Mobile" />
       <span class="validation-message" id="mobileValidation"></span><br />
       <button type="submit">Preview</button>
     </form>
@@ -617,7 +617,7 @@
         }
 
         // Validate mobile - Not empty check only
-        if (!mobile || mobilr.length > 20) {
+        if (!mobile || mobile.length > 20) {
           mobileValidation.innerHTML = "Mobile number should not be empty and should not exceed 20 characters.";
           isValid = false;
         }
