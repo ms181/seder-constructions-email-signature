@@ -617,8 +617,8 @@
         }
 
         // Validate mobile - Not empty check only
-        if (!mobile) {
-          mobileValidation.innerHTML = "Mobile number should not be empty.";
+        if (!mobile || mobilr.length > 20) {
+          mobileValidation.innerHTML = "Mobile number should not be empty and should not exceed 20 characters.";
           isValid = false;
         }
 
